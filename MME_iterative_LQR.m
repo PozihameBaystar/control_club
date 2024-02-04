@@ -38,6 +38,7 @@ iLQR.len_u = length(iLQR.u);
 iLQR.U = zeros(iLQR.len_u,iLQR.N,iLQR.k);    %コントローラに与える初期操作量
 U_min = zeros(iLQR.len_u,iLQR.N);
 iLQR.sig = zeros(iLQR.len_u,iLQR.len_u,iLQR.N,iLQR.k);
+iLQR.weight = ones(1,iLQR.k); %重みを入れる変数
 
 %目標地点
 iLQR.x_ob = [10,0,0]';
@@ -175,7 +176,7 @@ function [U_min,U,sig,X] = MME_iLQR_control(iLQR,car)
     J = zeros(1,iLQR.k);
     J_new = zeros(1,iLQR.k);
     VH = zeros(1,iLQR.k);
-    weight = ones(1,iLQR.k);
+    weight = iLQR.weight; %重みも再利用
 
     for i = 1:iLQR.k
         X(:,:,i) = Predict(car.x,U(:,:,i),iLQR,car); %状態変数の将来値を入力初期値から予測
